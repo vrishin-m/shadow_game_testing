@@ -1,0 +1,45 @@
+# --- Unity Auto-Generated Temporary Folders ---
+/[L|l]ibrary/
+/[T|t]emp/
+/[O|o]bj/
+/[B|b]uild/
+/[B|b]uilds/
+/[L|l]ogs/
+/[U|u]ser[S|s]ettings/
+/[M|m]emoryCaptures/
+Library/
+Library
+
+.vscode
+.vscode/
+.vs/
+*.csproj
+*.unityproj
+*.sln
+*.slnx
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.opendb
+*.VC.db
+
+# --- OS Specific Files ---
+.DS_Store
+.DS_Store?
+ehthumbs.db
+Thumbs.db
+
+# --- WebGL / Build Artifacts ---
+/[A|a]ssets/AssetStoreTools*
+
+# --- Crash Reports ---
+sysinfo.txt
+
+# --- Builds ---
+*.apk
+*.aab
+*.unitypackage
