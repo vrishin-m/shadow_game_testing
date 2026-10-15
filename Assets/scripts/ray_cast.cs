@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System.Linq;
+
 using Unity.Collections.Tests.CoreCLR.TestJobs;
 using UnityEditor.SearchService;
 using UnityEngine;
@@ -9,10 +9,11 @@ public class ray_cast : MonoBehaviour
     private object_manager manager_script;
     private List<MeshFilter> objects;
     private List<Light> lights;
-    private Transform wall;
+    private MeshFilter wall;
     private List<List<Vector3>> normals;
     private List<List<Vector3>> centers;
 
+    private List<Vector2> shadow_points;
     public struct EdgeData
         {
             public int vertexA;
@@ -31,6 +32,7 @@ public class ray_cast : MonoBehaviour
             objects = manager_script.objects;
             lights = manager_script.lights;
             wall = manager_script.wall;
+            shadow_points = new List<Vector2>();
 
             foreach (MeshFilter meshfilter in objects)
             {
@@ -116,7 +118,7 @@ public class ray_cast : MonoBehaviour
 
                 allObjectEdges.Add(objectEdges);
             }
-        }
+    }
 
     // Update is called once per frame
     void FixedUpdate()
@@ -125,7 +127,7 @@ public class ray_cast : MonoBehaviour
         {
             int j=0;
 
-
+            float max_dist = (light.transform.position - wall.transform.position).magnitude*2;
             foreach (MeshFilter mesh in objects)
             {
                 j+=1;
@@ -149,10 +151,41 @@ public class ray_cast : MonoBehaviour
 
                     }
                 
+                //loop over every edge to find the silhouette vertices
+                int k =0;
+                List<Vector3> silhouette = new List<Vector3>();
+                foreach(EdgeData edge in allObjectEdges[j])
+                    {
+                        k+=1;
+                        if (edge.faceIndex1 != edge.faceIndex2)
+                            {
+                                silhouette.Add(mesh.transform.localToWorldMatrix.MultiplyPoint(mesh.mesh.vertices[edge.vertexA]));
+                                silhouette.Add(mesh.transform.localToWorldMatrix.MultiplyPoint(mesh.mesh.vertices[edge.vertexB]));
+                            }
+                    }
+                
+                //removing duplicates
+                List<Vector3> uniqueItems = new List<Vector3>(new HashSet<Vector3>(silhouette));
+
+                //actual raycasting
+                //wall object must be in layer 6, named "wall"
+
+                foreach (Vector3 vert in uniqueItems){
+                    Vector3 direction = (light.transform.position - vert).normalized;
+                    RaycastHit hit;
+
+                    if  (Physics.Raycast(vert, direction, out hit, max_dist, 6))
+
+                        {
+                            Vector2 local_pt = wall.transform.worldToLocalMatrix.MultiplyPoint(hit.point);
+                            shadow_points.Add(local_pt);
 
 
+                        }
+
+                        }
             }
-        }
        
+        }
     }
 }
