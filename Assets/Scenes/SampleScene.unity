@@ -268,6 +268,8 @@ GameObject:
   - component: {fileID: 464779003}
   - component: {fileID: 464779006}
   - component: {fileID: 464779005}
+  - component: {fileID: 464779008}
+  - component: {fileID: 464779007}
   m_Layer: 0
   m_Name: manager
   m_TagString: Untagged
@@ -317,6 +319,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8cd129a10dc5ec42b1f7d80678e26bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::clustering
+  max_dist: 0.5
+  min_neighbors: 2
+  current_cluster: []
+  current_distances: []
+  avg_dist: []
 --- !u!114 &464779006
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -331,6 +338,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ray_cast
   shadow_points: []
   shadow_distances: []
+--- !u!114 &464779007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 464779002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f6c98771a1f0d747a85a076e8334dd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::convex_hull
+--- !u!114 &464779008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 464779002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84a5c08efb1cc9b4aa2022e4f22c7889, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::collider_n_shade
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0

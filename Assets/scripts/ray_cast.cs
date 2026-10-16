@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 
 using Unity.Collections.Tests.CoreCLR.TestJobs;
-using UnityEditor.SearchService;
+
 using UnityEngine;
 
 public class ray_cast : MonoBehaviour
@@ -38,6 +38,8 @@ public class ray_cast : MonoBehaviour
             wall = manager_script.wall;
             shadow_points = new List<Vector2>();
             shadow_distances = new List<float>();
+            normals = new List<List<Vector3>>();
+            centers = new List<List<Vector3>>();
             foreach (MeshFilter meshfilter in objects)
             {
                 if (meshfilter == null || meshfilter.sharedMesh == null)
@@ -141,7 +143,7 @@ public class ray_cast : MonoBehaviour
                 
                 //loop over each face in the mesh
                 List<int> illuminated = new List<int>();
-                for (int i=0; i< mesh.mesh.triangles.Length; i = i + 3)
+                for (int i=0; i< mesh.sharedMesh.triangles.Length; i = i + 3)
                     {
                         Vector3 light_dir = light_pos - centers[j][i/3];
                         float dotprod = Vector3.Dot(light_dir, normals[j][i/3]);
@@ -178,15 +180,16 @@ public class ray_cast : MonoBehaviour
                 //wall object must be in layer 6, named "wall"
 
                 foreach (Vector3 vert in uniqueItems){
-                    Vector3 direction = -(light.transform.position - vert).normalized;
+                    Vector3 light_vec = light.transform.position - vert;
+                    Vector3 direction = -light_vec.normalized;
                     RaycastHit hit;
 
-                    if  (Physics.Raycast(vert, direction, out hit, max_dist, 2^6))
+                    if  (Physics.Raycast(vert, direction, out hit, max_dist, 1<<6))
 
                         {
                             Vector2 local_pt = wall.transform.worldToLocalMatrix.MultiplyPoint(hit.point);
                             shadow_points.Add(local_pt);
-                            shadow_distances.Add(hit.distance);
+                            shadow_distances.Add(hit.distance + light_vec.magnitude);
 
                         }
 

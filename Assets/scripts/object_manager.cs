@@ -7,7 +7,7 @@ public class object_manager : MonoBehaviour
     
     public MeshFilter wall;
 
-    [Header("lights")]
+    [Header("lights")]  
 
     public List<Light> lights;
 
