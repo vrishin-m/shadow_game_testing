@@ -266,6 +266,8 @@ GameObject:
   m_Component:
   - component: {fileID: 464779004}
   - component: {fileID: 464779003}
+  - component: {fileID: 464779006}
+  - component: {fileID: 464779005}
   m_Layer: 0
   m_Name: manager
   m_TagString: Untagged
@@ -303,6 +305,32 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &464779005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 464779002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8cd129a10dc5ec42b1f7d80678e26bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::clustering
+--- !u!114 &464779006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 464779002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c00b6315ba135e947a578b1de3ac81f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ray_cast
+  shadow_points: []
+  shadow_distances: []
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0

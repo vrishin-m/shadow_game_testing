@@ -1,3 +1,6 @@
+//this class returns the public variables shadow_points and shadow_distances
+//respectively, a list of 2d vectors and list of floats.
+
 using System.Collections.Generic;
 
 using Unity.Collections.Tests.CoreCLR.TestJobs;
@@ -13,7 +16,8 @@ public class ray_cast : MonoBehaviour
     private List<List<Vector3>> normals;
     private List<List<Vector3>> centers;
 
-    private List<Vector2> shadow_points;
+    public List<Vector2> shadow_points;
+    public List<float> shadow_distances;
     public struct EdgeData
         {
             public int vertexA;
@@ -33,7 +37,7 @@ public class ray_cast : MonoBehaviour
             lights = manager_script.lights;
             wall = manager_script.wall;
             shadow_points = new List<Vector2>();
-
+            shadow_distances = new List<float>();
             foreach (MeshFilter meshfilter in objects)
             {
                 if (meshfilter == null || meshfilter.sharedMesh == null)
@@ -123,11 +127,13 @@ public class ray_cast : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        shadow_points.Clear();
+        shadow_distances.Clear();
         foreach (Light light in lights)
         {
-            int j=0;
+            int j=-1;
 
-            float max_dist = (light.transform.position - wall.transform.position).magnitude*2;
+            float max_dist = (light.transform.position - wall.transform.position).magnitude*5f;
             foreach (MeshFilter mesh in objects)
             {
                 j+=1;
@@ -137,8 +143,8 @@ public class ray_cast : MonoBehaviour
                 List<int> illuminated = new List<int>();
                 for (int i=0; i< mesh.mesh.triangles.Length; i = i + 3)
                     {
-                        Vector3 light_dir = light_pos - centers[j][i];
-                        float dotprod = Vector3.Dot(light_dir, normals[j][i]);
+                        Vector3 light_dir = light_pos - centers[j][i/3];
+                        float dotprod = Vector3.Dot(light_dir, normals[j][i/3]);
 
                         if (dotprod > 0)
                             {
@@ -154,13 +160,14 @@ public class ray_cast : MonoBehaviour
                 //loop over every edge to find the silhouette vertices
                 int k =0;
                 List<Vector3> silhouette = new List<Vector3>();
+                List<Vector2> shadow_pts_ob = new List<Vector2>();
                 foreach(EdgeData edge in allObjectEdges[j])
                     {
                         k+=1;
-                        if (edge.faceIndex1 != edge.faceIndex2)
+                        if (illuminated[edge.faceIndex1] != illuminated[edge.faceIndex2])
                             {
-                                silhouette.Add(mesh.transform.localToWorldMatrix.MultiplyPoint(mesh.mesh.vertices[edge.vertexA]));
-                                silhouette.Add(mesh.transform.localToWorldMatrix.MultiplyPoint(mesh.mesh.vertices[edge.vertexB]));
+                                silhouette.Add(mesh.transform.localToWorldMatrix.MultiplyPoint(mesh.sharedMesh.vertices[edge.vertexA]));
+                                silhouette.Add(mesh.transform.localToWorldMatrix.MultiplyPoint(mesh.sharedMesh.vertices[edge.vertexB]));
                             }
                     }
                 
@@ -171,20 +178,23 @@ public class ray_cast : MonoBehaviour
                 //wall object must be in layer 6, named "wall"
 
                 foreach (Vector3 vert in uniqueItems){
-                    Vector3 direction = (light.transform.position - vert).normalized;
+                    Vector3 direction = -(light.transform.position - vert).normalized;
                     RaycastHit hit;
 
-                    if  (Physics.Raycast(vert, direction, out hit, max_dist, 6))
+                    if  (Physics.Raycast(vert, direction, out hit, max_dist, 2^6))
 
                         {
                             Vector2 local_pt = wall.transform.worldToLocalMatrix.MultiplyPoint(hit.point);
                             shadow_points.Add(local_pt);
-
-
-                        }
+                            shadow_distances.Add(hit.distance);
 
                         }
+
+                    }
+            
             }
+        
+        
        
         }
     }

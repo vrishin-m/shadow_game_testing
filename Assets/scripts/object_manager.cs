@@ -5,7 +5,7 @@ public class object_manager : MonoBehaviour
 {
     [Header("wall coordinates")]
     
-    public Transform wall;
+    public MeshFilter wall;
 
     [Header("lights")]
 
